@@ -2,6 +2,8 @@
 
 Ứng dụng Windows của [Zea.Tools](../README.md), chạy ở khay hệ thống và cung cấp phím tắt cho File Explorer, SSMS và DBeaver.
 
+Tải ZIP portable từ [GitHub Releases](https://github.com/nguyentovan/Zea.Tools/releases/latest), giải nén toàn bộ và chạy `Zea.Tweakr.exe` ở gốc. Xem [hướng dẫn portable và cập nhật](releases.md) để biết cấu trúc thư mục và cách phát hành.
+
 ## Sử dụng
 
 | Phím tắt | Thao tác |
@@ -16,4 +18,4 @@ SSMS sử dụng dialect T-SQL. Với DBeaver, ứng dụng nhận diện dialec
 
 ## Tự chạy cùng Windows
 
-Nhấn **Win+R**, nhập `shell:startup` và tạo shortcut đến `Zea.Tweakr.exe` trong thư mục vừa mở.
+Nhấn **Win+R**, nhập `shell:startup` và tạo shortcut đến `Zea.Tweakr.exe` ở gốc thư mục portable trong thư mục vừa mở.

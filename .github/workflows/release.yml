@@ -1,0 +1,102 @@
+name: Release Zea.Tweakr
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Stable version to build without publishing (MAJOR.MINOR.PATCH)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zea-tweakr-stable-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Validate version
+        id: version
+        shell: pwsh
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          $version = if ($env:EVENT_NAME -eq 'push') {
+            if ($env:RELEASE_TAG -notmatch '^v((0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*))$') {
+              throw 'Release tags must use vMAJOR.MINOR.PATCH without a prerelease suffix.'
+            }
+            $Matches[1]
+          } else {
+            $env:INPUT_VERSION
+          }
+          if ($version -notmatch '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$') {
+            throw 'Version must use MAJOR.MINOR.PATCH.'
+          }
+          "value=$version" >> $env:GITHUB_OUTPUT
+      - name: Verify updater behavior
+        shell: pwsh
+        run: dotnet run --project scripts/UpdateChecks -c Release
+      - name: Build and verify portable release
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.value }}
+        run: ./scripts/Build-Release.ps1 -Version $env:RELEASE_VERSION
+      - name: Verify portable download and restart
+        shell: pwsh
+        run: ./scripts/update-smoke/Verify-PortableUpdate.ps1
+      - name: Preserve portable update evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portable-update-evidence
+          path: |
+            artifacts/update-smoke/*/result.json
+            artifacts/update-smoke/*/events.jsonl
+            artifacts/update-smoke/*/source-evidence.json
+            artifacts/update-smoke/*/logs/*
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Zea.Tweakr-${{ steps.version.outputs.value }}-win-x64
+          path: artifacts/${{ steps.version.outputs.value }}/Releases/*
+          if-no-files-found: error
+      - name: Publish complete GitHub release
+        if: github.event_name == 'push'
+        shell: pwsh
+        env:
+          VPK_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ steps.version.outputs.value }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_REPOSITORY: ${{ github.server_url }}/${{ github.repository }}
+          RELEASE_COMMIT: ${{ github.sha }}
+          RELEASE_API_URL: ${{ github.api_url }}/repos/${{ github.repository }}/releases/latest
+        run: |
+          $headers = @{ Authorization = "Bearer $env:VPK_TOKEN"; Accept = 'application/vnd.github+json' }
+          $latest = Invoke-WebRequest -Uri $env:RELEASE_API_URL -Headers $headers -SkipHttpErrorCheck
+          if ($latest.StatusCode -eq 200) {
+            $latestTag = ($latest.Content | ConvertFrom-Json).tag_name
+            if ($latestTag -notmatch '^v([0-9]+\.[0-9]+\.[0-9]+)$') {
+              throw "Latest release has an unsupported version tag: $latestTag"
+            }
+            if ([version]::Parse($env:RELEASE_VERSION) -le [version]::Parse($Matches[1])) {
+              throw "Release $env:RELEASE_TAG must be newer than $latestTag."
+            }
+          } elseif ($latest.StatusCode -ne 404) {
+            throw "Cannot validate the latest release (HTTP $($latest.StatusCode))."
+          }
+          dotnet tool run vpk -- --skip-updates upload github --outputDir "artifacts/$env:RELEASE_VERSION/Releases" --channel stable --repoUrl $env:RELEASE_REPOSITORY --tag $env:RELEASE_TAG --releaseName "Zea.Tweakr $env:RELEASE_VERSION" --targetCommitish $env:RELEASE_COMMIT --publish
+          if ($LASTEXITCODE -ne 0) { throw "Release upload failed with exit code $LASTEXITCODE." }

@@ -11,7 +11,7 @@ namespace Zea.Tweakr;
 
 public partial class App : Application
 {
-    private readonly CancellationTokenSource _shutdown = new();
+    private CancellationTokenSource _shutdown = new();
     private readonly SqlSelectionService _sql = new();
     private readonly ExplorerService _explorer = new();
     private IClassicDesktopStyleApplicationLifetime? _desktop;
@@ -21,6 +21,10 @@ public partial class App : Application
     private FeatureSettings _settings = new();
     private Task _sqlOperation = Task.CompletedTask;
     private Task _explorerOperation = Task.CompletedTask;
+    private readonly AppUpdater _updater = AppUpdater.CreateDefault();
+    private Task _updateSchedule = Task.CompletedTask;
+    private Task _manualUpdate = Task.CompletedTask;
+    private string? _notifiedUpdateVersion;
     private bool _exiting;
 
     public override void Initialize()
@@ -38,6 +42,7 @@ public partial class App : Application
             ExplorerTrace.Log($"app.start pid={Environment.ProcessId} exe=\"{Environment.ProcessPath}\" assembly=\"{typeof(App).Assembly.Location}\" windows={Environment.OSVersion.Version}");
             SqlTrace.Log($"app.start pid={Environment.ProcessId} exe=\"{Environment.ProcessPath}\"");
             LoadSettings();
+            _updater.StatusChanged += DisplayUpdateStatus;
             try
             {
                 ApplySettings(_settings);
@@ -47,6 +52,12 @@ public partial class App : Application
                 ExplorerTrace.Log($"app.start.hotkeyError code={exception.NativeErrorCode} message=\"{exception.Message}\"");
                 SqlTrace.Log($"app.start.hotkeyError code={exception.NativeErrorCode}");
                 ShowBackgroundToast(exception.Message, NotificationType.Error);
+            }
+
+            _updateSchedule = RunUpdateSchedule(_shutdown.Token);
+            if (desktop.Args?.Contains("--settings", StringComparer.OrdinalIgnoreCase) == true)
+            {
+                ShowSettings(this, EventArgs.Empty);
             }
         }
 
@@ -93,6 +104,9 @@ public partial class App : Application
             _window = new MainWindow();
             _window.DisplaySettings(_settings);
             _window.SettingsSaved += SaveSettings;
+            _window.CheckForUpdatesRequested += QueueUpdateCheck;
+            _window.RestartForUpdateRequested += RestartForUpdate;
+            _window.DisplayUpdate(_updater.Status);
         }
 
         return _window;
@@ -200,6 +214,82 @@ public partial class App : Application
         toast.Show();
     }
 
+    private void DisplayUpdateStatus(AppUpdateStatus status)
+    {
+        Dispatcher.UIThread.Post(() => _window?.DisplayUpdate(status));
+    }
+
+    private void CheckForUpdates(object? sender, EventArgs args)
+    {
+        QueueUpdateCheck();
+    }
+
+    private void QueueUpdateCheck()
+    {
+        if (!_exiting && _manualUpdate.IsCompleted && _updater.Status.CanCheck)
+        {
+            _manualUpdate = RunManualUpdateCheck(_shutdown.Token);
+        }
+    }
+
+    private async Task RunManualUpdateCheck(CancellationToken cancellationToken)
+    {
+        await _updater.CheckAndDownloadAsync(cancellationToken);
+        if (!_exiting && !cancellationToken.IsCancellationRequested)
+        {
+            var status = _updater.Status;
+            if (status.Phase == AppUpdatePhase.Ready)
+            {
+                _notifiedUpdateVersion = status.AvailableVersion;
+            }
+            if (_window is { IsVisible: true, WindowState: not WindowState.Minimized })
+            {
+                _window.ShowUpdateResult(status);
+            }
+            else if (MainWindow.CreateUpdateNotification(status) is { } notification)
+            {
+                ShowBackgroundToast($"{notification.Title}\n{notification.Message}".TrimEnd(), notification.Type);
+            }
+        }
+    }
+
+    private async Task RunUpdateSchedule(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _updater.CheckAndDownloadAsync(cancellationToken);
+            NotifyUpdateReady();
+            using var timer = new PeriodicTimer(TimeSpan.FromMinutes(15));
+            while (await timer.WaitForNextTickAsync(cancellationToken))
+            {
+                await _updater.CheckAndDownloadAsync(cancellationToken);
+                NotifyUpdateReady();
+            }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+    }
+
+    private void NotifyUpdateReady()
+    {
+        var status = _updater.Status;
+        if (_exiting || status.Phase != AppUpdatePhase.Ready || _notifiedUpdateVersion == status.AvailableVersion)
+        {
+            return;
+        }
+
+        _notifiedUpdateVersion = status.AvailableVersion;
+        if (_window is { IsVisible: true, WindowState: not WindowState.Minimized })
+        {
+            _window.ShowUpdateResult(status);
+        }
+        else
+        {
+            ShowBackgroundToast($"Đã tải phiên bản {status.AvailableVersion}. Mở Cài đặt để cập nhật và khởi động lại.", NotificationType.Success);
+        }
+    }
+
     private async void ExitApp(object? sender, EventArgs args)
     {
         if (_exiting)
@@ -207,14 +297,50 @@ public partial class App : Application
             return;
         }
 
+        await StopOperations();
+        _desktop?.Shutdown();
+    }
+
+    private async void RestartForUpdate()
+    {
+        if (_exiting || !_updater.Status.CanRestart)
+        {
+            return;
+        }
+
+        _window?.SetUpdateActionsEnabled(false);
+        await StopOperations();
+        if (_updater.TryApplyAndRestart())
+        {
+            _desktop?.Shutdown();
+            return;
+        }
+
+        _shutdown.Dispose();
+        _shutdown = new CancellationTokenSource();
+        _exiting = false;
+        try
+        {
+            ApplySettings(_settings);
+        }
+        catch (System.ComponentModel.Win32Exception exception)
+        {
+            ShowBackgroundToast(exception.Message, NotificationType.Error);
+        }
+        _window?.DisplayUpdate(_updater.Status);
+        _window?.ShowUpdateError("Không thể áp dụng bản cập nhật. Vui lòng thử lại sau.");
+        _updateSchedule = RunUpdateSchedule(_shutdown.Token);
+    }
+
+    private async Task StopOperations()
+    {
         _exiting = true;
         _backgroundToast?.Close();
         _shutdown.Cancel();
         _hotkeys?.Dispose();
         _hotkeys = null;
         _explorer.SetEnabled(false);
-        await Task.WhenAll(_sqlOperation, _explorerOperation);
-        _desktop?.Shutdown();
+        await Task.WhenAll(_sqlOperation, _explorerOperation, _manualUpdate, _updateSchedule);
     }
 
     private void ReleaseResources(object? sender, ControlledApplicationLifetimeExitEventArgs args)
@@ -225,6 +351,7 @@ public partial class App : Application
         _hotkeys?.Dispose();
         _explorer.Dispose();
         _shutdown.Dispose();
+        _updater.StatusChanged -= DisplayUpdateStatus;
         SqlTrace.Log("app.exit");
         SqlTrace.Complete();
         ExplorerTrace.Log("app.exit");

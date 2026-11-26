@@ -13,6 +13,7 @@ Phạm vi cấp phép trên áp dụng cho `Zea.SqlFormat`. Các project khác c
 | [ANTLR](https://github.com/antlr/antlr4) | Runtime và lexer, parser sinh tự động | [BSD 3-Clause](../src/Zea.SqlFormat/Parsing/LICENSE.Antlr.txt) |
 | [SQLFluff](https://github.com/sqlfluff/sqlfluff/tree/4.5.0) | Grammar SELECT, JOIN và WITH port sang C# | [MIT](../src/Zea.SqlFormat/licenses/SQLFluff.txt) |
 | [Microsoft ScriptDom](https://github.com/microsoft/SqlScriptDOM) | Phân tích T-SQL | [MIT](../src/Zea.SqlFormat/licenses/ScriptDom.txt) |
+| [Velopack](https://github.com/velopack/velopack) | Đóng gói portable và cập nhật ứng dụng | [MIT](../src/Zea.Tweakr/licenses/Velopack.txt) |
 
 Bảng liệt kê các thành phần có file license lưu trong source. Các package NuGet khác có giấy phép riêng. Xem [phiên bản dependency](../Directory.Packages.props) và các `.csproj` để tra package đang dùng.
 

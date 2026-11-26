@@ -10,6 +10,7 @@
         <TrayIcon.Menu>
           <NativeMenu>
             <NativeMenuItem Header="Cài đặt" Click="ShowSettings" />
+            <NativeMenuItem Header="Kiểm tra cập nhật" Click="CheckForUpdates" />
             <NativeMenuItemSeparator />
             <NativeMenuItem Header="Exit" Click="ExitApp" />
           </NativeMenu>

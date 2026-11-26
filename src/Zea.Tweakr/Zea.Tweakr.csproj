@@ -12,7 +12,9 @@
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Velopack" />
     <AvaloniaResource Include="Assets/Zea.Tweakr.ico" />
+    <None Update="licenses/Velopack.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <ProjectReference Include="../Zea.Explorer/Zea.Explorer.csproj" />
     <ProjectReference Include="../Zea.SqlIntegration/Zea.SqlIntegration.csproj" />
     <ProjectReference Include="../Zea.SqlFormat/Zea.SqlFormat.csproj" />

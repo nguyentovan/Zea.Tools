@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <AssemblyName>Zea.Tweakr.UpdateSmoke</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Velopack" Version="1.2.161" />
+    <Compile Include="Program.cs" />
+    <Compile Include="$(AppUpdaterSource)" Link="AppUpdater.cs" />
+  </ItemGroup>
+  <Target Name="RequireProductionUpdater" BeforeTargets="BeforeBuild">
+    <Error Condition="!Exists('$(AppUpdaterSource)')" Text="Pass AppUpdaterSource with the path of the production AppUpdater.cs." />
+  </Target>
+</Project>

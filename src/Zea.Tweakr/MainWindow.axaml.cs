@@ -8,6 +8,8 @@ namespace Zea.Tweakr;
 public partial class MainWindow : Window
 {
     internal event Action<FeatureSettings>? SettingsSaved;
+    internal event Action? CheckForUpdatesRequested;
+    internal event Action? RestartForUpdateRequested;
 
     public MainWindow()
     {
@@ -39,6 +41,58 @@ public partial class MainWindow : Window
     {
         var notification = new Notification("Không thể áp dụng cài đặt.", message, NotificationType.Error, TimeSpan.FromSeconds(5));
         ShowSettingsToast(notification);
+    }
+
+    internal void ShowUpdateError(string message)
+    {
+        var notification = new Notification("Chưa thể cập nhật.", message, NotificationType.Error, TimeSpan.FromSeconds(5));
+        ShowSettingsToast(notification);
+    }
+
+    internal void ShowUpdateResult(AppUpdateStatus status)
+    {
+        var notification = CreateUpdateNotification(status);
+        if (notification is not null)
+        {
+            ShowSettingsToast(notification);
+        }
+    }
+
+    internal static Notification? CreateUpdateNotification(AppUpdateStatus status)
+    {
+        return status.Phase switch
+        {
+            AppUpdatePhase.UpToDate => new Notification("Bạn đang dùng phiên bản mới nhất.", string.Empty,
+                NotificationType.Information, TimeSpan.FromSeconds(3)),
+            AppUpdatePhase.Available => new Notification($"Có phiên bản {status.AvailableVersion} mới hơn.",
+                "Tải bản ZIP portable từ GitHub Releases để cập nhật.", NotificationType.Information, TimeSpan.FromSeconds(5)),
+            AppUpdatePhase.Ready => new Notification($"Đã tải phiên bản {status.AvailableVersion}.",
+                "Khởi động lại để áp dụng, hoặc dùng bản mới ở lần mở tiếp theo.", NotificationType.Success, TimeSpan.FromSeconds(5)),
+            AppUpdatePhase.Error => new Notification("Chưa thể cập nhật.",
+                "Không thể kiểm tra hoặc tải phiên bản mới. Hãy thử lại sau hoặc tải bản ZIP portable từ GitHub Releases.",
+                NotificationType.Error, TimeSpan.FromSeconds(5)),
+            _ => null
+        };
+    }
+
+    internal void DisplayUpdate(AppUpdateStatus status)
+    {
+        Title = $"Zea.Tweakr · {status.CurrentVersion}";
+        CheckUpdateButton.Content = status.Phase switch
+        {
+            AppUpdatePhase.Checking => "Đang kiểm tra…",
+            AppUpdatePhase.Downloading => "Đang tải…",
+            _ => "Kiểm tra cập nhật"
+        };
+        CheckUpdateButton.IsEnabled = status.CanCheck;
+        RestartUpdateButton.IsVisible = status.CanRestart;
+        RestartUpdateButton.IsEnabled = status.CanRestart;
+    }
+
+    internal void SetUpdateActionsEnabled(bool enabled)
+    {
+        CheckUpdateButton.IsEnabled = enabled;
+        RestartUpdateButton.IsEnabled = enabled;
     }
 
     private void ShowSettingsToast(Notification notification)
@@ -82,5 +136,15 @@ public partial class MainWindow : Window
     private void HideSettings(object? sender, RoutedEventArgs args)
     {
         Hide();
+    }
+
+    private void CheckForUpdates(object? sender, RoutedEventArgs args)
+    {
+        CheckForUpdatesRequested?.Invoke();
+    }
+
+    private void RestartForUpdate(object? sender, RoutedEventArgs args)
+    {
+        RestartForUpdateRequested?.Invoke();
     }
 }

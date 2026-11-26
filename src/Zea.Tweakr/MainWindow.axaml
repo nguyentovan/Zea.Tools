@@ -18,10 +18,14 @@
           <CheckBox x:Name="SqlLogConvertOption" Content="Chuyển log thành SQL · Ctrl+K, Ctrl+G" />
         </StackPanel>
       </Border>
-      <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
-        <Button Click="HideSettings">Ẩn vào khay</Button>
-        <Button Classes="accent" Click="SaveSettings">Lưu cài đặt</Button>
-      </StackPanel>
+      <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <Button x:Name="CheckUpdateButton" Margin="0,0,8,0" Click="CheckForUpdates">Kiểm tra cập nhật</Button>
+          <Button x:Name="RestartUpdateButton" Classes="accent" IsVisible="False" Click="RestartForUpdate">Cập nhật và khởi động lại</Button>
+        </WrapPanel>
+        <Button Grid.Column="1" VerticalAlignment="Bottom" Click="HideSettings">Ẩn vào khay</Button>
+        <Button Grid.Column="2" VerticalAlignment="Bottom" Classes="accent" Click="SaveSettings">Lưu cài đặt</Button>
+      </Grid>
     </StackPanel>
     <notifications:WindowNotificationManager x:Name="SettingsToast" Position="TopRight" MaxItems="1" />
   </Panel>

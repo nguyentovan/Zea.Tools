@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="NuGet.Config" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Zea.SqlFormat/Zea.SqlFormat.csproj" />
+    <Project Path="src/Zea.SqlLogConvert/Zea.SqlLogConvert.csproj" />
+    <Project Path="src/Zea.Explorer/Zea.Explorer.csproj" />
+    <Project Path="src/Zea.SqlIntegration/Zea.SqlIntegration.csproj" />
+    <Project Path="src/Zea.Tweakr/Zea.Tweakr.csproj" />
+  </Folder>
+</Solution>

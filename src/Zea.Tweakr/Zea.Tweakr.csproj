@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>$(TargetFrameworkCommon)$(TargetFrameworkSuffixWindows)</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ApplicationIcon>Assets/Zea.Tweakr.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <AvaloniaResource Include="Assets/Zea.Tweakr.ico" />
+    <ProjectReference Include="../Zea.Explorer/Zea.Explorer.csproj" />
+    <ProjectReference Include="../Zea.SqlIntegration/Zea.SqlIntegration.csproj" />
+    <ProjectReference Include="../Zea.SqlFormat/Zea.SqlFormat.csproj" />
+    <ProjectReference Include="../Zea.SqlLogConvert/Zea.SqlLogConvert.csproj" />
+  </ItemGroup>
+
+</Project>

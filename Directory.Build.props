@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <TargetFrameworkCommon>net10.0</TargetFrameworkCommon>
+    <TargetFrameworkSuffixWindows>-windows</TargetFrameworkSuffixWindows>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Build.local.props"
+          Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
+</Project>

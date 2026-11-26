@@ -1,0 +1,28 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:notifications="using:Avalonia.Controls.Notifications"
+        x:Class="Zea.Tweakr.MainWindow"
+        Title="Zea.Tweakr"
+        Icon="/Assets/Zea.Tweakr.ico"
+        Width="560"
+        SizeToContent="Height"
+        MinWidth="400"
+        WindowStartupLocation="CenterScreen">
+  <Panel>
+    <StackPanel Margin="28" Spacing="16">
+      <TextBlock Text="Phím tắt" FontSize="26" FontWeight="SemiBold" />
+      <Border Padding="16" CornerRadius="8" Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+        <StackPanel Spacing="12">
+          <CheckBox x:Name="ExplorerTabOption" Content="Tab File Explorer · Win+E" />
+          <CheckBox x:Name="SqlFormatOption" Content="Định dạng SQL · Ctrl+K, Ctrl+Y" />
+          <CheckBox x:Name="SqlLogConvertOption" Content="Chuyển log thành SQL · Ctrl+K, Ctrl+G" />
+        </StackPanel>
+      </Border>
+      <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+        <Button Click="HideSettings">Ẩn vào khay</Button>
+        <Button Classes="accent" Click="SaveSettings">Lưu cài đặt</Button>
+      </StackPanel>
+    </StackPanel>
+    <notifications:WindowNotificationManager x:Name="SettingsToast" Position="TopRight" MaxItems="1" />
+  </Panel>
+</Window>

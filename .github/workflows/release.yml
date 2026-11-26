@@ -50,6 +50,9 @@ jobs:
       - name: Verify updater behavior
         shell: pwsh
         run: dotnet run --project scripts/UpdateChecks -c Release
+      - name: Verify Windows startup behavior
+        shell: pwsh
+        run: dotnet run --project scripts/StartupChecks -c Release
       - name: Build and verify portable release
         shell: pwsh
         env:

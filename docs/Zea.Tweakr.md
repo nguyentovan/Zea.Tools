@@ -18,4 +18,6 @@ SSMS sử dụng dialect T-SQL. Với DBeaver, ứng dụng nhận diện dialec
 
 ## Tự chạy cùng Windows
 
-Nhấn **Win+R**, nhập `shell:startup` và tạo shortcut đến `Zea.Tweakr.exe` ở gốc thư mục portable trong thư mục vừa mở.
+Mở **Cài đặt** từ biểu tượng khay, chọn **Khởi động cùng Windows**, rồi chọn **Lưu cài đặt**. Tùy chọn mặc định tắt và chỉ áp dụng cho tài khoản Windows hiện tại, không cần quyền quản trị. Khi đăng nhập, ứng dụng chạy trong khay hệ thống.
+
+Để tắt, bỏ chọn **Khởi động cùng Windows** rồi lưu. Nếu di chuyển thư mục portable, mở ứng dụng ở vị trí mới và lưu lại tùy chọn để cập nhật đường dẫn. Nếu đã tạo shortcut thủ công trong `shell:startup`, xóa shortcut đó để tránh chạy hai lần.

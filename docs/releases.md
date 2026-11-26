@@ -27,6 +27,8 @@ File `Zea.Tweakr.exe` ở gốc là launcher ổn định. Dùng file này khi t
 
 Cài đặt phím tắt vẫn lưu ở `%LOCALAPPDATA%\Zea.Tweakr\settings.json`, giữ nguyên khi cập nhật hoặc di chuyển thư mục portable trên cùng tài khoản Windows.
 
+Bật **Khởi động cùng Windows** trong **Cài đặt** rồi lưu để tự chạy ở khay khi đăng nhập. Ứng dụng đăng ký launcher ở gốc cho tài khoản hiện tại. Sau khi di chuyển thư mục portable, mở ứng dụng ở vị trí mới và lưu lại tùy chọn để cập nhật đường dẫn.
+
 ## Cập nhật
 
 Ứng dụng kiểm tra GitHub Releases khi khởi động và mỗi 15 phút. Bản portable chỉ nhận bản stable mới hơn từ repository công khai và tự tải gói về nền. Có thể chọn **Kiểm tra cập nhật** trong Cài đặt hoặc menu khay để kiểm tra ngay. Kết quả kiểm tra thủ công hiện trong toast.

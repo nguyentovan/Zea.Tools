@@ -19,6 +19,7 @@ public partial class App : Application
     private BackgroundToastWindow? _backgroundToast;
     private WindowsHotkeys? _hotkeys;
     private FeatureSettings _settings = new();
+    private readonly StartupRegistration _startup = new();
     private Task _sqlOperation = Task.CompletedTask;
     private Task _explorerOperation = Task.CompletedTask;
     private readonly AppUpdater _updater = AppUpdater.CreateDefault();
@@ -74,6 +75,15 @@ public partial class App : Application
         {
             ShowBackgroundToast($"Không thể đọc cấu hình. {exception.Message}", NotificationType.Error);
         }
+
+        try
+        {
+            _settings = _settings with { StartWithWindows = _startup.IsEnabled() };
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.Security.SecurityException)
+        {
+            ShowBackgroundToast($"Không thể đọc cài đặt khởi động cùng Windows. {exception.Message}", NotificationType.Error);
+        }
     }
 
     private void ShowSettings(object? sender, EventArgs args)
@@ -122,10 +132,12 @@ public partial class App : Application
         try
         {
             settings.Save();
+            _startup.SetEnabled(settings.StartWithWindows);
             ApplySettings(settings);
             GetWindow().ShowSettingsSaved();
         }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.ComponentModel.Win32Exception)
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.ComponentModel.Win32Exception
+            or System.Security.SecurityException or InvalidOperationException)
         {
             GetWindow().ShowSettingsSaveError(exception.Message);
         }

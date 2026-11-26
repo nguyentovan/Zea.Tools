@@ -10,12 +10,13 @@
         WindowStartupLocation="CenterScreen">
   <Panel>
     <StackPanel Margin="28" Spacing="16">
-      <TextBlock Text="Phím tắt" FontSize="26" FontWeight="SemiBold" />
+      <TextBlock Text="Cài đặt" FontSize="26" FontWeight="SemiBold" />
       <Border Padding="16" CornerRadius="8" Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
         <StackPanel Spacing="12">
           <CheckBox x:Name="ExplorerTabOption" Content="Tab File Explorer · Win+E" />
           <CheckBox x:Name="SqlFormatOption" Content="Định dạng SQL · Ctrl+K, Ctrl+Y" />
           <CheckBox x:Name="SqlLogConvertOption" Content="Chuyển log thành SQL · Ctrl+K, Ctrl+G" />
+          <CheckBox x:Name="StartWithWindowsOption" Content="Khởi động cùng Windows" />
         </StackPanel>
       </Border>
       <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">

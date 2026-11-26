@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Zea.Tweakr;
 
@@ -8,6 +9,8 @@ internal sealed record FeatureSettings
     public bool ExplorerTab { get; init; } = true;
     public bool SqlFormat { get; init; } = true;
     public bool SqlLogConvert { get; init; } = true;
+    [JsonIgnore]
+    public bool StartWithWindows { get; init; }
 
     private static string SettingsPath
     {

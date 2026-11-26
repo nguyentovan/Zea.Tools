@@ -29,6 +29,7 @@ public partial class MainWindow : Window
         ExplorerTabOption.IsChecked = settings.ExplorerTab;
         SqlFormatOption.IsChecked = settings.SqlFormat;
         SqlLogConvertOption.IsChecked = settings.SqlLogConvert;
+        StartWithWindowsOption.IsChecked = settings.StartWithWindows;
     }
 
     internal void ShowSettingsSaved()
@@ -128,7 +129,8 @@ public partial class MainWindow : Window
         {
             ExplorerTab = ExplorerTabOption.IsChecked == true,
             SqlFormat = SqlFormatOption.IsChecked == true,
-            SqlLogConvert = SqlLogConvertOption.IsChecked == true
+            SqlLogConvert = SqlLogConvertOption.IsChecked == true,
+            StartWithWindows = StartWithWindowsOption.IsChecked == true
         };
         SettingsSaved?.Invoke(settings);
     }

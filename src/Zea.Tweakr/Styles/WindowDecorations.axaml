@@ -1,0 +1,109 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:chrome="using:Avalonia.Controls.Chrome">
+  <ControlTheme x:Key="SettingsCaptionButton" TargetType="Button">
+    <Setter Property="Width" Value="46" />
+    <Setter Property="Height" Value="40" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource Md3OnSurfaceBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}">
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:pointerover">
+      <Setter Property="Background" Value="{DynamicResource Md3SurfaceContainerHighBrush}" />
+    </Style>
+    <Style Selector="^:pressed">
+      <Setter Property="Background" Value="{DynamicResource Md3SurfaceContainerHighestBrush}" />
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Opacity" Value="0.38" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="SettingsCloseCaptionButton" TargetType="Button"
+                BasedOn="{StaticResource SettingsCaptionButton}">
+    <Style Selector="^:pointerover">
+      <Setter Property="Background" Value="{DynamicResource Md3ErrorBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource Md3OnErrorBrush}" />
+    </Style>
+    <Style Selector="^:pressed">
+      <Setter Property="Background" Value="{DynamicResource Md3ErrorContainerBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource Md3OnErrorContainerBrush}" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="SettingsWindowDecorations" TargetType="chrome:WindowDrawnDecorations">
+    <Setter Property="DefaultTitleBarHeight" Value="40" />
+    <Setter Property="DefaultFrameThickness" Value="1" />
+    <Setter Property="DefaultShadowThickness" Value="0" />
+    <Setter Property="Template">
+      <WindowDrawnDecorationsTemplate>
+        <WindowDrawnDecorationsContent>
+          <WindowDrawnDecorationsContent.Underlay>
+            <Panel Margin="{TemplateBinding ShadowThickness}">
+              <Border BorderThickness="{TemplateBinding FrameThickness}"
+                      BorderBrush="{DynamicResource Md3OutlineVariantBrush}"
+                      IsHitTestVisible="False" />
+              <Panel Name="PART_TitleBar" Height="{TemplateBinding TitleBarHeight}"
+                     Margin="{TemplateBinding FrameThickness}"
+                     VerticalAlignment="Top" IsVisible="{TemplateBinding HasTitleBar}"
+                     Background="{DynamicResource Md3SurfaceBrush}"
+                     WindowDecorationProperties.ElementRole="TitleBar" />
+            </Panel>
+          </WindowDrawnDecorationsContent.Underlay>
+          <WindowDrawnDecorationsContent.Overlay>
+            <Panel Margin="{TemplateBinding ShadowThickness}">
+              <Grid Height="{TemplateBinding TitleBarHeight}" Margin="{TemplateBinding FrameThickness}"
+                    VerticalAlignment="Top" ColumnDefinitions="*,Auto"
+                    IsVisible="{TemplateBinding HasTitleBar}">
+                <TextBlock Text="{TemplateBinding Title}" Margin="16,0,12,0"
+                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                           IsHitTestVisible="False" FontSize="14" FontWeight="Medium"
+                           Foreground="{DynamicResource Md3OnSurfaceBrush}" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                  <Button Name="PART_MinimizeButton" Theme="{StaticResource SettingsCaptionButton}"
+                          AutomationProperties.Name="Minimize"
+                          WindowDecorationProperties.ElementRole="MinimizeButton">
+                    <Path Width="10" Height="10" Stretch="Uniform"
+                          Fill="{Binding $parent[Button].Foreground}"
+                          Data="M0,5 L10,5 L10,6 L0,6 Z" />
+                  </Button>
+                  <Button Name="PART_MaximizeButton" Theme="{StaticResource SettingsCaptionButton}"
+                          AutomationProperties.Name="Maximize or restore"
+                          WindowDecorationProperties.ElementRole="MaximizeButton">
+                    <Path Name="RestoreButtonPath" Width="10" Height="10" Stretch="Uniform"
+                          Fill="{Binding $parent[Button].Foreground}"
+                          Data="M0,0 L10,0 L10,10 L0,10 Z M1,1 L1,9 L9,9 L9,1 Z" />
+                  </Button>
+                  <Button Name="PART_CloseButton" Theme="{StaticResource SettingsCloseCaptionButton}"
+                          AutomationProperties.Name="Close"
+                          WindowDecorationProperties.ElementRole="CloseButton">
+                    <Path Width="10" Height="10" Stretch="Uniform"
+                          Fill="{Binding $parent[Button].Foreground}"
+                          Data="M0,1 L1,0 L5,4 L9,0 L10,1 L6,5 L10,9 L9,10 L5,6 L1,10 L0,9 L4,5 Z" />
+                  </Button>
+                </StackPanel>
+              </Grid>
+            </Panel>
+          </WindowDrawnDecorationsContent.Overlay>
+        </WindowDrawnDecorationsContent>
+      </WindowDrawnDecorationsTemplate>
+    </Setter>
+    <Style Selector="^:maximized /template/ Path#RestoreButtonPath">
+      <Setter Property="Data" Value="M2,0 L10,0 L10,8 L8,8 L8,10 L0,10 L0,2 L2,2 Z M3,1 L3,2 L8,2 L8,7 L9,7 L9,1 Z M1,3 L1,9 L7,9 L7,3 Z" />
+    </Style>
+    <Style Selector="^:not(:has-minimize) /template/ Button#PART_MinimizeButton">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="^:not(:has-maximize) /template/ Button#PART_MaximizeButton">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

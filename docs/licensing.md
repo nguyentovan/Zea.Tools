@@ -14,6 +14,7 @@ Phạm vi cấp phép trên áp dụng cho `Zea.SqlFormat`. Các project khác c
 | [SQLFluff](https://github.com/sqlfluff/sqlfluff/tree/4.5.0) | Grammar SELECT, JOIN và WITH port sang C# | [MIT](../src/Zea.SqlFormat/licenses/SQLFluff.txt) |
 | [Microsoft ScriptDom](https://github.com/microsoft/SqlScriptDOM) | Phân tích T-SQL | [MIT](../src/Zea.SqlFormat/licenses/ScriptDom.txt) |
 | [Velopack](https://github.com/velopack/velopack) | Đóng gói portable và cập nhật ứng dụng | [MIT](../src/Zea.Tweakr/licenses/Velopack.txt) |
+| [Material3.Avalonia](https://github.com/greepar/Material3.Avalonia) | Theme Material Design 3 | [Apache 2.0](../src/Zea.Tweakr/licenses/Material3.Avalonia.txt), [NOTICE](../src/Zea.Tweakr/licenses/Material3.Avalonia.NOTICE.txt) |
 
 Bảng liệt kê các thành phần có file license lưu trong source. Các package NuGet khác có giấy phép riêng. Xem [phiên bản dependency](../Directory.Packages.props) và các `.csproj` để tra package đang dùng.
 

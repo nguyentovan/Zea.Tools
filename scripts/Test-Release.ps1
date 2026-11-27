@@ -48,8 +48,9 @@ foreach ($name in @(
     'Zea.Tweakr.exe', 'Zea.Tweakr.dll', 'Zea.Tweakr.runtimeconfig.json', 'Zea.Tweakr.deps.json',
     'Zea.SqlFormat.exe', 'Zea.SqlFormat.dll', 'Zea.SqlFormat.runtimeconfig.json', 'Zea.SqlFormat.deps.json',
     'Zea.SqlLogConvert.exe', 'Zea.SqlLogConvert.dll', 'Zea.SqlLogConvert.runtimeconfig.json', 'Zea.SqlLogConvert.deps.json',
-    'coreclr.dll', 'hostfxr.dll', 'hostpolicy.dll', 'Velopack.dll', 'LICENSE', 'THIRD-PARTY-NOTICES.md',
-    'licenses/Antlr.txt', 'licenses/DBeaver.txt', 'licenses/RightWay.txt', 'licenses/ScriptDom.txt', 'licenses/SQLFluff.txt', 'licenses/Velopack.txt'
+    'coreclr.dll', 'hostfxr.dll', 'hostpolicy.dll', 'Velopack.dll', 'Material3.Avalonia.dll', 'LICENSE', 'THIRD-PARTY-NOTICES.md',
+    'licenses/Antlr.txt', 'licenses/DBeaver.txt', 'licenses/RightWay.txt', 'licenses/ScriptDom.txt', 'licenses/SQLFluff.txt', 'licenses/Velopack.txt',
+    'licenses/Material3.Avalonia.txt', 'licenses/Material3.Avalonia.NOTICE.txt'
 )) {
     Require-File $PublishDirectory $name
 }
@@ -94,7 +95,8 @@ if ($ReleasesDirectory) {
             'current/Zea.SqlLogConvert.exe', 'current/Zea.SqlLogConvert.runtimeconfig.json',
             'current/THIRD-PARTY-NOTICES.md', 'current/LICENSE',
             'current/licenses/Antlr.txt', 'current/licenses/DBeaver.txt', 'current/licenses/RightWay.txt',
-            'current/licenses/ScriptDom.txt', 'current/licenses/SQLFluff.txt', 'current/licenses/Velopack.txt'
+            'current/licenses/ScriptDom.txt', 'current/licenses/SQLFluff.txt', 'current/licenses/Velopack.txt',
+            'current/Material3.Avalonia.dll', 'current/licenses/Material3.Avalonia.txt', 'current/licenses/Material3.Avalonia.NOTICE.txt'
         )) {
             if ($entries -notcontains $required) { throw "Portable ZIP is missing $required." }
         }

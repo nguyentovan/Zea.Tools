@@ -11,10 +11,12 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Desktop" />
-    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Material3.Avalonia" />
     <PackageReference Include="Velopack" />
     <AvaloniaResource Include="Assets/Zea.Tweakr.ico" />
     <None Update="licenses/Velopack.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="licenses/Material3.Avalonia.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="licenses/Material3.Avalonia.NOTICE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <ProjectReference Include="../Zea.Explorer/Zea.Explorer.csproj" />
     <ProjectReference Include="../Zea.SqlIntegration/Zea.SqlIntegration.csproj" />
     <ProjectReference Include="../Zea.SqlFormat/Zea.SqlFormat.csproj" />

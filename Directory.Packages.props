@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Material3.Avalonia" Version="0.2.0-preview.1" />
     <PackageVersion Include="Velopack" Version="1.2.161" />
   </ItemGroup>
 </Project>

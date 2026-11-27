@@ -7,26 +7,37 @@
         Width="560"
         SizeToContent="Height"
         MinWidth="400"
-        WindowStartupLocation="CenterScreen">
-  <Panel>
+        WindowStartupLocation="CenterScreen"
+        WindowDecorationsTheme="{StaticResource SettingsWindowDecorations}"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowDecorations="Full">
+  <Panel Margin="{Binding $parent[Window].WindowDecorationMargin}">
     <StackPanel Margin="28" Spacing="16">
-      <TextBlock Text="Cài đặt" FontSize="26" FontWeight="SemiBold" />
-      <Border Padding="16" CornerRadius="8" Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+      <TextBlock Text="Cài đặt" Classes="headline-small" />
+      <Border Background="{DynamicResource Md3SurfaceContainerBrush}" CornerRadius="24" Padding="24">
         <StackPanel Spacing="12">
-          <CheckBox x:Name="ExplorerTabOption" Content="Tab File Explorer · Win+E" />
-          <CheckBox x:Name="SqlFormatOption" Content="Định dạng SQL · Ctrl+K, Ctrl+Y" />
-          <CheckBox x:Name="SqlLogConvertOption" Content="Chuyển log thành SQL · Ctrl+K, Ctrl+G" />
-          <CheckBox x:Name="StartWithWindowsOption" Content="Khởi động cùng Windows" />
+          <CheckBox x:Name="ExplorerTabOption" HorizontalAlignment="Stretch">
+            <TextBlock Text="Tab File Explorer · Win+E" TextWrapping="Wrap" />
+          </CheckBox>
+          <CheckBox x:Name="SqlFormatOption" HorizontalAlignment="Stretch">
+            <TextBlock Text="Định dạng SQL · Ctrl+K, Ctrl+Y" TextWrapping="Wrap" />
+          </CheckBox>
+          <CheckBox x:Name="SqlLogConvertOption" HorizontalAlignment="Stretch">
+            <TextBlock Text="Chuyển log thành SQL · Ctrl+K, Ctrl+G" TextWrapping="Wrap" />
+          </CheckBox>
+          <CheckBox x:Name="StartWithWindowsOption" HorizontalAlignment="Stretch">
+            <TextBlock Text="Khởi động cùng Windows" TextWrapping="Wrap" />
+          </CheckBox>
         </StackPanel>
       </Border>
-      <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
-        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-          <Button x:Name="CheckUpdateButton" Margin="0,0,8,0" Click="CheckForUpdates">Kiểm tra cập nhật</Button>
-          <Button x:Name="RestartUpdateButton" Classes="accent" IsVisible="False" Click="RestartForUpdate">Cập nhật và khởi động lại</Button>
-        </WrapPanel>
-        <Button Grid.Column="1" VerticalAlignment="Bottom" Click="HideSettings">Ẩn vào khay</Button>
-        <Button Grid.Column="2" VerticalAlignment="Bottom" Classes="accent" Click="SaveSettings">Lưu cài đặt</Button>
-      </Grid>
+      <StackPanel Spacing="12">
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+          <Button x:Name="CheckUpdateButton" Grid.Column="0" Classes="outlined" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MinHeight="40" Click="CheckForUpdates">Kiểm tra cập nhật</Button>
+          <Button Grid.Column="1" Classes="outlined" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MinHeight="40" Click="HideSettings">Ẩn vào khay</Button>
+        </Grid>
+        <Button x:Name="RestartUpdateButton" Classes="tonal" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MinHeight="40" IsVisible="False" Click="RestartForUpdate">Cập nhật và khởi động lại</Button>
+        <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MinHeight="40" Click="SaveSettings">Lưu cài đặt</Button>
+      </StackPanel>
     </StackPanel>
     <notifications:WindowNotificationManager x:Name="SettingsToast" Position="TopRight" MaxItems="1" />
   </Panel>

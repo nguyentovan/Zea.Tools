@@ -73,6 +73,7 @@ Các thông báo của thành phần bên thứ ba được giữ trong thư m�
 | SQLFluff | [MIT](licenses/SQLFluff.txt) |
 | Microsoft ScriptDom | [MIT](licenses/ScriptDom.txt) |
 | Velopack | [MIT](licenses/Velopack.txt) |
+| Material3.Avalonia | [Apache 2.0](licenses/Material3.Avalonia.txt), [NOTICE](licenses/Material3.Avalonia.NOTICE.txt) |
 
 Các package NuGet khác giữ giấy phép của upstream. Danh sách dependency và hướng dẫn build nằm trong mã nguồn của tag trên.
 '@
